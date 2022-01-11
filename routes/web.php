@@ -21,4 +21,8 @@ Auth::routes(['verify' => true]);
 Route::group(['middleware' => ['auth', 'verified']], function(){
     //地址列表
     Route::get('user_addresses', 'UserAddressesController@index')->name('user_addresses.index');
+    //新增地址表单
+    Route::get('user_addresses/create', 'UserAddressesController@create')->name('user_addresses.create');
+    //新增地址
+    Route::post('user_addresses/store', 'UserAddressesController@store')->name('user_addresses.store');
 });
