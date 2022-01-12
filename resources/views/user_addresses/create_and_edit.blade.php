@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', '新增收货地址')
+@section('title', ($address->id ? '修改':'新增').'收货地址')
 
 @section('content')
   <div class="row">
@@ -7,7 +7,7 @@
       <div class="card">
         <div class="card-header">
           <h2 class="text-center">
-            新增收货地址
+            {{ $address->id ? '修改':'新增' }}收货地址
           </h2>
         </div>
         <div class="card-body">
@@ -23,8 +23,14 @@
             </div>
           @endif
         <!-- 输出后端报错结束 -->
+          @if($address->id)
+            <form class="form-horizontal" role="form" method="post" action="{{ route('user_addresses.update', $address->id) }}">
+              {{ method_field('PUT') }}
+          @else
           <form class="form-horizontal" role="form" method="post" action="{{ route('user_addresses.store') }}">
+          @endif
             {{ csrf_field() }}
+
             <!-- inline-template 代表通过内联方式引入组件 -->
             <div class="row mb-3">
               <label for="province" class="col-md-4 col-form-label text-md-end">{{ __('省') }}</label>

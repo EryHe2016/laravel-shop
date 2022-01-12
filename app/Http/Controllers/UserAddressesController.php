@@ -20,6 +20,11 @@ class UserAddressesController extends Controller
         return view('user_addresses.create_and_edit', ['address' => new UserAddress()]);
     }
 
+    /**
+     * 新增地址
+     * @param UserAddressRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(UserAddressRequest $request)
     {
         $request->user()->addresses()->create($request->only([
@@ -31,6 +36,40 @@ class UserAddressesController extends Controller
             'contact_name',
             'contact_phone',
         ]));
+
+        return redirect()->route('user_addresses.index');
+    }
+
+    /**
+     * 展示编辑表单
+     * @param UserAddress $user_address
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function edit(UserAddress $user_address)
+    {
+        $this->authorize('own', $user_address);
+        return view('user_addresses.create_and_edit', ['address' => $user_address]);
+    }
+
+    public function update(UserAddress $user_address, UserAddressRequest $request)
+    {
+        $user_address->update($request->only([
+            'province',
+            'city',
+            'district',
+            'address',
+            'zip',
+            'contact_name',
+            'contact_phone'
+        ]));
+
+        return redirect()->route('user_addresses.index');
+    }
+
+    public function destroy(UserAddress $user_address)
+    {
+        $this->authorize('own', $user_address);
+        $user_address->delete();
 
         return redirect()->route('user_addresses.index');
     }
