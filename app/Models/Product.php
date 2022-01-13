@@ -32,4 +32,5 @@ class Product extends Model
         //\Storage::disk()的参数public要和config/admin.php里的upload.disk配置一致
         return \Storage::disk('public')->url($this->attributes['image']);
     }
+
 }

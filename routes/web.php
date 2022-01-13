@@ -14,7 +14,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::redirect('/', '/products')->name('root');
-Route::get('products', 'ProductsController@index')->name('products.index');
+
+Route::group(['prefix' => 'products'], function(){
+    //商品列表页
+    Route::get('/', 'ProductsController@index')->name('products.index');
+    //商品详情页
+    Route::get('/{product}', 'ProductsController@show')->name('products.show');
+});
 
 Auth::routes(['verify' => true]);
 
