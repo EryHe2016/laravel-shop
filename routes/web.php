@@ -15,13 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/products')->name('root');
 
-Route::group(['prefix' => 'products'], function(){
-    //商品列表页
-    Route::get('/', 'ProductsController@index')->name('products.index');
-    //商品详情页
-    Route::get('/{product}', 'ProductsController@show')->name('products.show');
-});
-
 Auth::routes(['verify' => true]);
 
 //auth 中间件代表需要登录，verified中间件代表需要经过邮箱验证
@@ -41,4 +34,12 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
 
     Route::post('/products/{product}/favorite', 'ProductsController@favor')->name('products.favor');
     Route::delete('/products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
+    Route::get('products/favorites', 'ProductsController@favorites')->name('products.favorites');
+});
+
+Route::group(['prefix' => 'products'], function(){
+    //商品列表页
+    Route::get('/', 'ProductsController@index')->name('products.index');
+    //商品详情页
+    Route::get('/{product}', 'ProductsController@show')->name('products.show');
 });
