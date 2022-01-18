@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class ProductsController extends Controller
 {
+    /**
+     * 产品列表页
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index(Request $request)
     {
         //创建一个查询器
@@ -15,24 +20,23 @@ class ProductsController extends Controller
         //判断是否有search参数，有就赋值给$search变量用来模糊搜索商品
         if($search = $request->input('search', '')){
             $like = '%'.$search.'%';
-            //模糊搜索商品标题，商品描述，SKU标题，SKU描述
-            $builder->where(function ($query) use ($like) {
+            //模糊搜索商品标题，商品详情，SKU标题，SKU描述
+            $builder->where(function($query) use($like){
                 $query->where('title', 'like', $like)
                     ->orWhere('description', 'like', $like)
-                    ->orWhereHas('skus', function ($query) use ($like) {
+                    ->orWhereHas('skus', function($query) use($like){
                         $query->where('title', 'like', $like)
-                            ->orWhere('description', 'like', $like);
+                            ->orWHere('description', 'like', $like);
                     });
             });
         }
 
         //是否提交 order 参数 控制商品的排序规则
         if($order = $request->input('order', '')){
-            //是否以_asc或者_desc结尾
-            if(preg_match('/^(.+)_(asc|desc)$/', $order, $m)){
-                //如果字符串的开头是下面3个之一，说明是一个合法的排序
-                if(in_array($m[1], ['price', 'rating', 'sold_count'])){
-                    //根据传入的排序值来构造排序参数
+            //是否以_desc或者_asc结尾
+            if(preg_match('/^(.+)_(desc|asc)$/', $order, $m)){
+                //如果字符串的开头是这3个字符串之一，说明是一个合法的排序值
+                if(in_array($m[1], ['price', 'sold_count', 'rating'])){
                     $builder->orderBy($m[1], $m[2]);
                 }
             }
@@ -49,11 +53,18 @@ class ProductsController extends Controller
         ]);
     }
 
+    /**
+     * 产品详情页
+     * @param Product $product
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @throws InvalidRequestException
+     */
     public function show(Product $product, Request $request)
     {
         //判断商品是否已经上架，没有上架抛出异常
         if(!$product->on_sale){
-            throw new InvalidRequestException('商品已下架');
+            throw new \Exception('商品未上架');
         }
 
         return view('products.show', ['product' => $product]);

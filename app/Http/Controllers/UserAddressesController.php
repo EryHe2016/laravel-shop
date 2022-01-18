@@ -71,6 +71,7 @@ class UserAddressesController extends Controller
         $this->authorize('own', $user_address);
         $user_address->delete();
 
-        return redirect()->route('user_addresses.index');
+        //return redirect()->route('user_addresses.index');
+        return [];
     }
 }

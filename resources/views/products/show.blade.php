@@ -65,11 +65,12 @@
 @endsection
 @section('scriptsAfterJs')
   <script>
-    $(document).ready(function () {
+    $(document).ready(function(){
       $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
-      $('.sku-btn').click(function () {
-        $('.product-info .price span').text($(this).data('price'));
-        $('.product-info .stock').text('库存：' + $(this).data('stock') + '件');
+
+      $(".sku-btn").click(function(){
+        $(".product-info .price span").text($(this).data('price'));
+        $(".product-info .stock").text('库存：' + $(this).data('stock') + '件');
       });
     });
   </script>

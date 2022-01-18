@@ -7,8 +7,8 @@ function route_class()
 function select_set($type, $value)
 {
     $html = '';
-    if($type==$value){
+    /*if($type==$value){
         $html = ' selected="selected" ';
-    }
+    }*/
     return $html;
 }
