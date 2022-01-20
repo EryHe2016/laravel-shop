@@ -32,9 +32,15 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
     //删除地址
     Route::delete('user_addresses/{user_address}', 'UserAddressesController@destroy')->name('user_addresses.destroy');
 
+    //收藏产品
     Route::post('/products/{product}/favorite', 'ProductsController@favor')->name('products.favor');
+    //取消收藏
     Route::delete('/products/{product}/favorite', 'ProductsController@disfavor')->name('products.disfavor');
+    //收藏列表
     Route::get('products/favorites', 'ProductsController@favorites')->name('products.favorites');
+
+    //产品加入购物车
+    Route::post('cart', 'CartController@add')->name('cart.add');
 });
 
 Route::group(['prefix' => 'products'], function(){

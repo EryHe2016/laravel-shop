@@ -73,6 +73,8 @@
       $('[data-toggle="tooltip"]').tooltip({trigger: 'hover'});
 
       $(".sku-btn").click(function(){
+        $(this).siblings().removeClass('active');
+        $(this).addClass('active');
         $(".product-info .price span").text($(this).data('price'));
         $(".product-info .stock").text('库存：' + $(this).data('stock') + '件');
       });
@@ -104,6 +106,34 @@
         });
       });
 
+      //产品加入购物车
+      $(".btn-add-to-cart").click(function(){
+        //请求加入购物车接口
+        axios.post('{{ route('cart.add') }}',{
+          sku_id: $("label.active input[name='skus']").val(),
+          amount: $(".cart_amount input").val(),
+        })
+        .then(function(){//请求成功
+          swal('加入购物车成功', '', 'success');
+        }, function(error){//请求失败
+          if(error.response.status===401){
+            //用户未登录
+            swal('请先登录', '', 'error');
+          }else if(error.response.status===422){
+            //http状态码为422代表用户输入校验失败
+            var html = '<div>';
+            _.each(error.response.data.errors, function(errors){
+              _.each(errors, function(error){
+                html += error+'<br>';
+              })
+            });
+            html += '</div>';
+            swal({content:$(html)[0], icon: 'error'});
+          }else{
+            swal('网络错误', '', 'error');
+          }
+        });
+      });
     });
   </script>
 @endsection
