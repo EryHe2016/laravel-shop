@@ -36,8 +36,10 @@ class CartController extends Controller
     {
         //with()预加载防止N+1查询问题 .的方式支持加载多层级关联
         $cartItems = $request->user()->cartItems()->with(['productSku.product'])->get();
+        //获取收货地址
+        $addresses = $request->user()->addresses()->orderBy('last_used_at', 'desc')->get();
 
-        return view('cart.index', ['cartItems' => $cartItems]);
+        return view('cart.index', ['cartItems' => $cartItems, 'addresses' => $addresses]);
     }
 
     public function remove(ProductSku $sku, Request $request)
